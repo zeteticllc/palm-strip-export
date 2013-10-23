@@ -108,23 +108,24 @@ sub export {
     }     
 
     my @systems = $strip->get_systems();
-    foreach my $system (@systems)
-    {
+    foreach my $system (@systems) {
         my $category = $system->get_name();
         my @accounts = $strip->get_accounts($system);
         next if (@accounts == 0);
     
         print $file "\"Category\",\"Entry\",\"Username\",\"Service\",\"Password\",\"Note\"\n";
-        foreach my $account (@accounts)
-        {
+        foreach my $account (@accounts) {
             my $system_name = $account->get_system();
+            if ($system_name eq '' or $system_name =~ /^\s*$/) {
+              $system_name = $category;
+            }
             my $username = $account->get_username();
             my $service = $account->get_service();
             my $password = $account->get_password();
             my $note = $account->get_comment();
-     	$password =~ s/\n/ /g;
-     	$note =~ s/\n/ /g;
-        	print $file "\"$category\",\"$system_name\",\"$username\",\"$service\",\"$password\",\"$note\"\n";
+           	$password =~ s/\n/ /g;
+           	$note =~ s/\n/ /g;
+        	  print $file "\"$category\",\"$system_name\",\"$username\",\"$service\",\"$password\",\"$note\"\n";
         }
     }
     
